@@ -1,0 +1,18 @@
+{
+  "name": "tourze/statistics-bundle",
+  "description": "平台统计",
+  "type": "symfony-bundle",
+  "require": {
+    "php": "^8.1",
+    "doctrine/doctrine-bundle": "^2.13",
+    "symfony/framework-bundle": "^6.4",
+    "tourze/easy-admin-attribute": "0.0.*",
+    "tourze/doctrine-indexed-bundle": "0.0.*",
+    "tourze/doctrine-timestamp-bundle": "0.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "StatisticsBundle\\": "src"
+    }
+  }
+}
