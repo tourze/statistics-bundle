@@ -46,7 +46,7 @@ class DailyReport implements PlainArrayInterface
     #[ORM\Column(type: Types::STRING, length: 20, options: ['comment' => '报表日期，格式：YYYY-MM-DD'])]
     private string $reportDate;
 
-    #[ORM\OneToMany(mappedBy: 'report', targetEntity: DailyMetric::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DailyMetric::class, mappedBy: 'report', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $metrics;
 
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['comment' => '额外数据'])]
