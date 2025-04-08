@@ -279,6 +279,8 @@ class DailyReport implements PlainArrayInterface
             'reportDate' => $this->getReportDate(),
             'metrics' => $metricsArray,
             'extraData' => $this->getExtraData(),
-        ] + $this->retrieveTimestampArray();
+            'createTime' => $this->getCreateTime()?->format('Y-m-d H:i:s'),
+            'updateTime' => $this->getUpdateTime()?->format('Y-m-d H:i:s'),
+        ];
     }
 }
