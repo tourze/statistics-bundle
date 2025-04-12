@@ -11,9 +11,12 @@
     "symfony/serializer": "^6.4",
     "symfony/messenger": "^6.4",
     "tourze/arrayable": "0.0.*",
+    "tourze/symfony-async-bundle": "0.0.*",
+    "tourze/doctrine-helper": "0.0.*",
     "tourze/easy-admin-attribute": "0.0.*",
     "tourze/doctrine-indexed-bundle": "0.0.*",
-    "tourze/doctrine-timestamp-bundle": "0.0.*"
+    "tourze/doctrine-timestamp-bundle": "0.0.*",
+    "tourze/symfony-lock-command-bundle": "0.0.*"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.0",
