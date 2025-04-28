@@ -38,5 +38,10 @@
     "psr-4": {
       "StatisticsBundle\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "StatisticsBundle\\Tests\\": "tests"
+    }
   }
 }
