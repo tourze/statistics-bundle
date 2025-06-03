@@ -29,11 +29,11 @@
     "symfony/string": "^6.4",
     "symfony/yaml": "^6.4 || ^7.1",
     "tourze/arrayable": "0.0.*",
+    "tourze/async-contracts": "0.0.*",
     "tourze/doctrine-helper": "0.0.*",
     "tourze/doctrine-indexed-bundle": "0.0.*",
     "tourze/doctrine-timestamp-bundle": "0.0.*",
     "tourze/easy-admin-attribute": "0.1.*",
-    "tourze/symfony-async-bundle": "0.0.*",
     "tourze/symfony-cron-job-bundle": "0.1.*",
     "tourze/symfony-lock-command-bundle": "0.0.*"
   },

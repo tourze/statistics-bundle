@@ -2,7 +2,7 @@
 
 namespace StatisticsBundle\Message;
 
-use Tourze\Symfony\Async\Message\AsyncMessageInterface;
+use Tourze\AsyncContracts\AsyncMessageInterface;
 
 class CreateTableStatsMessage implements AsyncMessageInterface
 {

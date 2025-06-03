@@ -6,7 +6,7 @@ namespace StatisticsBundle\Tests\Message;
 
 use PHPUnit\Framework\TestCase;
 use StatisticsBundle\Message\CreateTableStatsMessage;
-use Tourze\Symfony\Async\Message\AsyncMessageInterface;
+use Tourze\AsyncContracts\AsyncMessageInterface;
 
 class CreateTableStatsMessageTest extends TestCase
 {
