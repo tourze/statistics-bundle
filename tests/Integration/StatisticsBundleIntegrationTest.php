@@ -4,16 +4,38 @@ declare(strict_types=1);
 
 namespace StatisticsBundle\Tests\Integration;
 
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use StatisticsBundle\Command\GenerateDailyReportCommand;
 use StatisticsBundle\Command\StatsTableCommand;
 use StatisticsBundle\Service\DailyReportService;
+use StatisticsBundle\StatisticsBundle;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tourze\IntegrationTestKernel\IntegrationTestKernel;
 
 class StatisticsBundleIntegrationTest extends KernelTestCase
 {
     protected static function getKernelClass(): string
     {
         return IntegrationTestKernel::class;
+    }
+
+    protected static function createKernel(array $options = []): IntegrationTestKernel
+    {
+        $appendBundles = [
+            FrameworkBundle::class => ['all' => true],
+            DoctrineBundle::class => ['all' => true],
+            StatisticsBundle::class => ['all' => true],
+        ];
+        
+        $entityMappings = [];
+
+        return new IntegrationTestKernel(
+            $options['environment'] ?? 'test',
+            $options['debug'] ?? true,
+            $appendBundles,
+            $entityMappings
+        );
     }
 
     protected function setUp(): void
