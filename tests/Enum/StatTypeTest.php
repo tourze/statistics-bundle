@@ -27,7 +27,6 @@ class StatTypeTest extends TestCase
         $cases = StatType::cases();
         
         foreach ($cases as $case) {
-            $this->assertIsString($case->value);
             $this->assertNotEmpty($case->value);
         }
     }

@@ -10,36 +10,17 @@ use StatisticsBundle\Repository\DailyReportRepository;
 use Tourze\Arrayable\PlainArrayInterface;
 use Tourze\DoctrineIndexedBundle\Attribute\IndexColumn;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Action\Creatable;
-use Tourze\EasyAdmin\Attribute\Action\Deletable;
-use Tourze\EasyAdmin\Attribute\Action\Editable;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
-use Tourze\EasyAdmin\Attribute\Field\FormField;
-use Tourze\EasyAdmin\Attribute\Filter\Filterable;
-use Tourze\EasyAdmin\Attribute\Filter\Keyword;
-use Tourze\EasyAdmin\Attribute\Permission\AsPermission;
 
-#[AsPermission(title: '统计日报')]
-#[Creatable]
-#[Editable]
-#[Deletable]
 #[ORM\Entity(repositoryClass: DailyReportRepository::class)]
 #[ORM\Table(name: 'ims_statistics_daily_report', options: ['comment' => '统计日报表'])]
-class DailyReport implements PlainArrayInterface
+class DailyReport implements PlainArrayInterface, \Stringable
 {
     use TimestampableAware;
-    #[ListColumn(order: -1)]
-    #[ExportColumn]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
     private ?int $id = 0;
 
-    #[FormField]
-    #[Keyword]
-    #[Filterable]
-    #[ListColumn]
     #[IndexColumn]
     #[ORM\Column(type: Types::STRING, length: 20, options: ['comment' => '报表日期，格式：YYYY-MM-DD'])]
     private string $reportDate;
@@ -143,7 +124,7 @@ class DailyReport implements PlainArrayInterface
         }
 
         // 如果不存在，创建新的指标
-        if (!$existingMetric) {
+        if (!(bool) $existingMetric) {
             $existingMetric = new DailyMetric();
             $existingMetric->setMetricId($metricId)
                 ->setMetricName($metricName)
@@ -220,7 +201,9 @@ class DailyReport implements PlainArrayInterface
     {
         $this->extraData = $extraData;
         return $this;
-    }public function retrievePlainArray(): array
+    }
+
+    public function retrievePlainArray(): array
     {
         $metricsArray = [];
 
@@ -241,5 +224,10 @@ class DailyReport implements PlainArrayInterface
             'createTime' => $this->getCreateTime()?->format('Y-m-d H:i:s'),
             'updateTime' => $this->getUpdateTime()?->format('Y-m-d H:i:s'),
         ];
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('DailyReport[%s]', $this->reportDate?->format('Y-m-d') ?? 'no-date');
     }
 }

@@ -20,6 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class GenerateDailyReportCommand extends Command
 {
+    public const NAME = 'app:statistics:generate-daily-report';
     public function __construct(
         private readonly DailyReportService $dailyReportService,
         private readonly EntityManagerInterface $entityManager,
@@ -41,7 +42,7 @@ class GenerateDailyReportCommand extends Command
         $force = $input->getOption('force');
 
         $io->title('生成统计日报');
-        $io->section("日期: {$date->toDateString()}" . ($force ? ' (强制更新)' : ''));
+        $io->section("日期: {$date->toDateString()}" . ((bool) $force ? ' (强制更新)' : ''));
 
         // 获取已注册的指标提供者数量
         $providers = $this->dailyReportService->getMetricProviders();

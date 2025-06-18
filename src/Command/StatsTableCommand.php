@@ -25,6 +25,7 @@ use Tourze\Symfony\CronJob\Attribute\AsCronTask;
 #[AsCommand(name: 'app:stats-table', description: '定期统计表数据')]
 class StatsTableCommand extends LockableCommand
 {
+    public const NAME = 'app:stats-table';
     private Inflector $inflector;
 
     public function __construct(

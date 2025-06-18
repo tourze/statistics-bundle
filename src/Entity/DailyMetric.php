@@ -6,18 +6,14 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use StatisticsBundle\Repository\DailyMetricRepository;
 use Tourze\DoctrineTimestampBundle\Traits\TimestampableAware;
-use Tourze\EasyAdmin\Attribute\Column\ExportColumn;
-use Tourze\EasyAdmin\Attribute\Column\ListColumn;
 
 #[ORM\Entity(repositoryClass: DailyMetricRepository::class)]
 #[ORM\Table(name: 'ims_statistics_daily_metric', options: ['comment' => '统计日报指标值'])]
 #[ORM\Index(name: 'ims_statistics_daily_metric_report_metric', columns: ['report_id', 'metric_id'])]
 #[ORM\Index(name: 'ims_statistics_daily_metric_metric_id', columns: ['metric_id'])]
-class DailyMetric
+class DailyMetric implements \Stringable
 {
     use TimestampableAware;
-    #[ListColumn(order: -1)]
-    #[ExportColumn]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: Types::INTEGER, options: ['comment' => 'ID'])]
@@ -130,4 +126,10 @@ class DailyMetric
         }
 
         return $this;
-    }}
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('DailyMetric[%s:%s]', $this->metricId ?? 'unknown', $this->value);
+    }
+}

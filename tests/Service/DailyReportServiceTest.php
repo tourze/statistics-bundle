@@ -46,7 +46,6 @@ class DailyReportServiceTest extends TestCase
     public function test_getMetricProviders_initiallyEmpty(): void
     {
         $providers = $this->service->getMetricProviders();
-        $this->assertIsArray($providers);
         $this->assertEmpty($providers);
     }
 
@@ -210,8 +209,6 @@ class DailyReportServiceTest extends TestCase
             ->willReturn([]);
         
         $result = $this->service->getRecentDailyReports();
-        
-        $this->assertIsArray($result);
     }
 
     public function test_getRecentDailyReports_customDays(): void
@@ -229,8 +226,6 @@ class DailyReportServiceTest extends TestCase
             ->willReturn([]);
         
         $result = $this->service->getRecentDailyReports($days);
-        
-        $this->assertIsArray($result);
     }
 
     public function test_deleteDailyReport_existing(): void

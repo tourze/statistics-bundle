@@ -45,7 +45,6 @@ class StatTimeDimensionTest extends TestCase
         
         foreach ($cases as $case) {
             $suffix = $case->getTableNameSuffix();
-            $this->assertIsString($suffix);
             $this->assertStringStartsWith('_', $suffix);
             $this->assertStringEndsWith('_stats', $suffix);
         }
