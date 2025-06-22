@@ -18,6 +18,18 @@ enum StatTimeDimension: string implements Itemable, Labelable, Selectable
     case WEEKLY_TOTAL = 'weekly_total';
     case MONTHLY_TOTAL = 'monthly_total';
 
+    public function getLabel(): string
+    {
+        return match($this) {
+            self::DAILY_NEW => '每日新增',
+            self::WEEKLY_NEW => '每周新增',
+            self::MONTHLY_NEW => '每月新增',
+            self::DAILY_TOTAL => '每日总量',
+            self::WEEKLY_TOTAL => '每周总量',
+            self::MONTHLY_TOTAL => '每月总量',
+        };
+    }
+
     public function getTableNameSuffix(): string
     {
         return match($this) {

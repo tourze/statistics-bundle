@@ -66,7 +66,7 @@ class StatisticsExtensionTest extends TestCase
         $serviceDefinitions = $this->container->getDefinitions();
         
         foreach ($serviceDefinitions as $definition) {
-            if ($definition->getClass() && str_starts_with($definition->getClass(), 'StatisticsBundle\\')) {
+            if ($definition->getClass() !== null && str_starts_with($definition->getClass(), 'StatisticsBundle\\')) {
                 $this->assertTrue($definition->isAutowired(), 
                     'Service ' . $definition->getClass() . ' should be autowired');
             }
@@ -81,7 +81,7 @@ class StatisticsExtensionTest extends TestCase
         $serviceDefinitions = $this->container->getDefinitions();
         
         foreach ($serviceDefinitions as $definition) {
-            if ($definition->getClass() && str_starts_with($definition->getClass(), 'StatisticsBundle\\')) {
+            if ($definition->getClass() !== null && str_starts_with($definition->getClass(), 'StatisticsBundle\\')) {
                 $this->assertTrue($definition->isAutoconfigured(), 
                     'Service ' . $definition->getClass() . ' should be autoconfigured');
             }
@@ -121,7 +121,7 @@ class StatisticsExtensionTest extends TestCase
         $serviceFound = false;
         
         foreach ($definitions as $definition) {
-            if ($definition->getClass()) {
+            if ($definition->getClass() !== null) {
                 if (str_contains($definition->getClass(), 'Command\\')) {
                     $commandFound = true;
                 }

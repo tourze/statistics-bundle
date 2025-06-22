@@ -59,7 +59,7 @@ class DailyReport implements PlainArrayInterface, \Stringable
 
     /**
      * 获取所有指标集合
-     * 
+     *
      * @return Collection<int, DailyMetric>
      */
     public function getMetrics(): Collection
@@ -228,6 +228,6 @@ class DailyReport implements PlainArrayInterface, \Stringable
 
     public function __toString(): string
     {
-        return sprintf('DailyReport[%s]', $this->reportDate?->format('Y-m-d') ?? 'no-date');
+        return sprintf('DailyReport[%s]', $this->reportDate ?? 'no-date');
     }
 }

@@ -14,4 +14,13 @@ enum StatType: string implements Itemable, Labelable, Selectable
     case SUM = 'sum';
     case COUNT = 'count';
     case AVG = 'avg';
+
+    public function getLabel(): string
+    {
+        return match($this) {
+            self::SUM => '总和',
+            self::COUNT => '计数',
+            self::AVG => '平均值',
+        };
+    }
 }

@@ -42,7 +42,6 @@ class StatisticsBundleTest extends TestCase
     public function test_bundlePath(): void
     {
         $path = $this->bundle->getPath();
-        $this->assertIsString($path);
         $this->assertStringEndsWith('statistics-bundle/src', $path);
     }
 } 

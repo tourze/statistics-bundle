@@ -22,7 +22,7 @@ use Tourze\Symfony\CronJob\Attribute\AsCronTask;
 
 #[AsCronTask('10 * * * *')]
 #[AsCronTask('59 23 * * *')]
-#[AsCommand(name: 'app:stats-table', description: '定期统计表数据')]
+#[AsCommand(name: self::NAME, description: '定期统计表数据')]
 class StatsTableCommand extends LockableCommand
 {
     public const NAME = 'app:stats-table';

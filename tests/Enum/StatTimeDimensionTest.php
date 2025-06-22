@@ -41,7 +41,7 @@ class StatTimeDimensionTest extends TestCase
     {
         $cases = StatTimeDimension::cases();
         
-        $this->assertNotEmpty($cases);
+        $this->assertCount(6, $cases);
         
         foreach ($cases as $case) {
             $suffix = $case->getTableNameSuffix();

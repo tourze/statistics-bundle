@@ -2,9 +2,8 @@
 
 namespace StatisticsBundle\MessageHandler;
 
-use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Doctrine\DBAL\Connection;
-use StatisticsBundle\Attribute\AsStatsColumn;
 use StatisticsBundle\Enum\StatTimeDimension;
 use StatisticsBundle\Enum\StatType;
 use StatisticsBundle\Message\CreateTableStatsMessage;
@@ -23,11 +22,11 @@ class CreateTableStatsHandler
 
     public function __invoke(CreateTableStatsMessage $message): void
     {
-        $startTime = Carbon::parse($message->getStartTime());
-        $endTime = Carbon::parse($message->getStartTime());
+        $startTime = CarbonImmutable::parse($message->getStartTime());
+        $endTime = CarbonImmutable::parse($message->getEndTime());
 
         foreach ($message->getStatColumns() as $columnName => [$propertyName, $statsType, $timeDimension]) {
-            /** @var AsStatsColumn $statsColumn */
+            // Process statistics columns
             $qb = $this->connection->createQueryBuilder();
             $qb->from($message->getTableName());
 
@@ -65,7 +64,7 @@ class CreateTableStatsHandler
             if ($rowCount > 0) {
                 $this->connection->update($message->getStatsTable(), [
                     $columnName => $statResult,
-                    'update_time' => Carbon::now(),
+                    'update_time' => CarbonImmutable::now(),
                 ], [
                     'start_time' => $startTime,
                     'end_time' => $endTime,
@@ -75,7 +74,7 @@ class CreateTableStatsHandler
                     $columnName => $statResult,
                     'start_time' => $startTime,
                     'end_time' => $endTime,
-                    'create_time' => Carbon::now(),
+                    'create_time' => CarbonImmutable::now(),
                 ]);
             }
         }

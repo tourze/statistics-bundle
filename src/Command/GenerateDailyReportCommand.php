@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:statistics:generate-daily-report',
+    name: self::NAME,
     description: '生成每日统计报告',
 )]
 class GenerateDailyReportCommand extends Command
@@ -60,7 +60,7 @@ class GenerateDailyReportCommand extends Command
         foreach ($this->dailyReportService->getMetricProviders() as $provider) {
             $metricId = $provider->getMetricId();
             $metric = $report->findMetric($metricId);
-            if (!$metric) {
+            if ($metric === null) {
                 $metric = new DailyMetric();
                 $metric->setMetricId($metricId);
             }
@@ -69,7 +69,7 @@ class GenerateDailyReportCommand extends Command
             $metric->setMetricName($provider->getMetricName());
             $metric->setMetricUnit($provider->getMetricUnit());
             $metric->setCategory($provider->getCategory());
-            $metric->setValue($provider->getMetricValue($date->toDateString()));
+            $metric->setValue($provider->getMetricValue($date));
 
             $report->addMetric($metric);
             $this->entityManager->persist($metric);
@@ -88,7 +88,7 @@ class GenerateDailyReportCommand extends Command
                 $rows[] = [
                     $metric->getMetricId(),
                     $metric->getMetricName(),
-                    $metric->getValue() . ($metric->getMetricUnit() ? " {$metric->getMetricUnit()}" : ''),
+                    $metric->getValue() . ($metric->getMetricUnit() !== null ? " {$metric->getMetricUnit()}" : ''),
                     $metric->getCategory() ?: '未分类'
                 ];
             }

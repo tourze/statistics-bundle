@@ -60,7 +60,7 @@ class DailyReportService
     {
         $report = $this->dailyReportRepository->findByDate($reportDate);
 
-        if (!$report) {
+        if ($report === null) {
             $report = new DailyReport();
             $report->setReportDate($reportDate);
         }
@@ -113,7 +113,7 @@ class DailyReportService
     {
         $report = $this->dailyReportRepository->findByDate($reportDate);
 
-        if (!$report) {
+        if ($report === null) {
             return false;
         }
 
