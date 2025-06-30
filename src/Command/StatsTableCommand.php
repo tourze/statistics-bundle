@@ -20,8 +20,8 @@ use Tourze\DoctrineHelper\ReflectionHelper;
 use Tourze\LockCommandBundle\Command\LockableCommand;
 use Tourze\Symfony\CronJob\Attribute\AsCronTask;
 
-#[AsCronTask('10 * * * *')]
-#[AsCronTask('59 23 * * *')]
+#[AsCronTask(expression: '10 * * * *')]
+#[AsCronTask(expression: '59 23 * * *')]
 #[AsCommand(name: self::NAME, description: '定期统计表数据')]
 class StatsTableCommand extends LockableCommand
 {

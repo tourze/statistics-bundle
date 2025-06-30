@@ -89,7 +89,7 @@ class GenerateDailyReportCommand extends Command
                     $metric->getMetricId(),
                     $metric->getMetricName(),
                     $metric->getValue() . ($metric->getMetricUnit() !== null ? " {$metric->getMetricUnit()}" : ''),
-                    $metric->getCategory() ?: '未分类'
+                    $metric->getCategory() !== null ? $metric->getCategory() : '未分类'
                 ];
             }
 

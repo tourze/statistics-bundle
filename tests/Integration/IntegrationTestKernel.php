@@ -35,4 +35,9 @@ class IntegrationTestKernel extends Kernel
     {
         return __DIR__ . '/var/log';
     }
+
+    public function getProjectDir(): string
+    {
+        return \dirname(__DIR__, 2);
+    }
 }

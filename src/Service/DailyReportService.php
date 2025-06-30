@@ -18,7 +18,7 @@ class DailyReportService
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly DailyReportRepository $dailyReportRepository,
-        #[TaggedIterator(MetricProviderInterface::SERVICE_TAG)] iterable $metricProviders,
+        #[TaggedIterator(tag: MetricProviderInterface::SERVICE_TAG)] iterable $metricProviders,
     ) {
         foreach ($metricProviders as $provider) {
             if ($provider instanceof MetricProviderInterface) {
