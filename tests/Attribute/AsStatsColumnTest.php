@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace StatisticsBundle\Tests\Attribute;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use StatisticsBundle\Attribute\AsStatsColumn;
 use StatisticsBundle\Enum\StatTimeDimension;
 use StatisticsBundle\Enum\StatType;
 
-class AsStatsColumnTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(AsStatsColumn::class)]
+final class AsStatsColumnTest extends TestCase
 {
-    public function test_construct_withAllParameters(): void
+    public function testConstructWithAllParameters(): void
     {
         $attribute = new AsStatsColumn(
             StatTimeDimension::DAILY_NEW,
@@ -26,7 +31,7 @@ class AsStatsColumnTest extends TestCase
         $this->assertSame('test_name', $attribute->name);
     }
 
-    public function test_construct_withNullName(): void
+    public function testConstructWithNullName(): void
     {
         $attribute = new AsStatsColumn(
             StatTimeDimension::WEEKLY_NEW,
@@ -40,7 +45,7 @@ class AsStatsColumnTest extends TestCase
         $this->assertNull($attribute->name);
     }
 
-    public function test_construct_withDifferentTimeDimensions(): void
+    public function testConstructWithDifferentTimeDimensions(): void
     {
         $dimensions = [
             StatTimeDimension::DAILY_NEW,
@@ -57,12 +62,12 @@ class AsStatsColumnTest extends TestCase
                 StatType::COUNT,
                 'Test'
             );
-            
+
             $this->assertSame($dimension, $attribute->timeDimension);
         }
     }
 
-    public function test_construct_withDifferentStatTypes(): void
+    public function testConstructWithDifferentStatTypes(): void
     {
         $types = [
             StatType::SUM,
@@ -76,12 +81,12 @@ class AsStatsColumnTest extends TestCase
                 $type,
                 'Test'
             );
-            
+
             $this->assertSame($type, $attribute->statsType);
         }
     }
 
-    public function test_construct_withEmptyTitle(): void
+    public function testConstructWithEmptyTitle(): void
     {
         $attribute = new AsStatsColumn(
             StatTimeDimension::MONTHLY_NEW,
@@ -92,7 +97,7 @@ class AsStatsColumnTest extends TestCase
         $this->assertSame('', $attribute->title);
     }
 
-    public function test_construct_withEmptyName(): void
+    public function testConstructWithEmptyName(): void
     {
         $attribute = new AsStatsColumn(
             StatTimeDimension::MONTHLY_NEW,
@@ -103,4 +108,4 @@ class AsStatsColumnTest extends TestCase
 
         $this->assertSame('', $attribute->name);
     }
-} 
+}

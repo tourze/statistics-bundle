@@ -2,16 +2,42 @@ services:
   # default configuration for services in *this* file
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    autoconfigure: false # 在测试环境中禁用自动配置以避免冲突
 
-  # 如果确认要使用自动扫描、自动注册，建议尽可能将要扫描的目录路径收缩，不要设置那么大的范围
-  StatisticsBundle\Command\:
-    resource: '../../Command/'
-  StatisticsBundle\MessageHandler\:
-    resource: '../../MessageHandler/'
-  StatisticsBundle\Metric\:
-    resource: '../../Metric/'
-  StatisticsBundle\Repository\:
-    resource: '../../Repository/'
-  StatisticsBundle\Service\:
-    resource: '../../Service/'
+  # 显式注册 Controller 并开启必要的服务功能
+  StatisticsBundle\Controller\:
+    resource: '../../Controller/'
+    public: true
+    autoconfigure: true
+    tags: ['controller.service_arguments']
+
+  # 手动配置命令服务，明确指定所有依赖
+  StatisticsBundle\Command\GenerateDailyReportCommand:
+    arguments:
+      $dailyReportService: '@StatisticsBundle\Service\DailyReportService'
+    tags:
+      - { name: 'console.command' }
+
+  StatisticsBundle\Command\StatsTableCommand:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+      $connection: '@doctrine.dbal.default_connection'
+      $messageBus: '@messenger.default_bus'
+    tags:
+      - { name: 'console.command' }
+    public: true
+
+  # 手动注册 DailyReportService
+  StatisticsBundle\Service\DailyReportService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
+
+  # Repository 服务 - 使用标准的 Doctrine Repository 配置
+  StatisticsBundle\Repository\DailyReportRepository:
+    tags: ['doctrine.repository_service']
+
+  StatisticsBundle\Repository\DailyMetricRepository:
+    tags: ['doctrine.repository_service']
+
+  # 接口别名
+  StatisticsBundle\Contract\DailyReportStorageInterface: '@StatisticsBundle\Repository\DailyReportRepository'

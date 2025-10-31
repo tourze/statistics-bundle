@@ -4,48 +4,68 @@ declare(strict_types=1);
 
 namespace StatisticsBundle\Tests\Enum;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestWith;
 use StatisticsBundle\Enum\StatType;
+use Tourze\PHPUnitEnum\AbstractEnumTestCase;
 
-class StatTypeTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(StatType::class)]
+final class StatTypeTest extends AbstractEnumTestCase
 {
-    public function test_enumValues(): void
+    #[TestWith([StatType::SUM, 'sum', '总和'])]
+    #[TestWith([StatType::COUNT, 'count', '计数'])]
+    #[TestWith([StatType::AVG, 'avg', '平均值'])]
+    public function testEnumValueAndLabel(StatType $enum, string $expectedValue, string $expectedLabel): void
     {
-        $this->assertSame('sum', StatType::SUM->value);
-        $this->assertSame('count', StatType::COUNT->value);
-        $this->assertSame('avg', StatType::AVG->value);
+        $this->assertSame($expectedValue, $enum->value);
+        $this->assertSame($expectedLabel, $enum->getLabel());
     }
 
-    public function test_enumCasesCount(): void
+    public function testEnumCasesCount(): void
     {
         $cases = StatType::cases();
         $this->assertCount(3, $cases);
     }
 
-    public function test_allEnumCasesHaveStringValues(): void
+    public function testAllEnumCasesHaveStringValues(): void
     {
         $cases = StatType::cases();
-        
+
         foreach ($cases as $case) {
             $this->assertNotEmpty($case->value);
         }
     }
 
-    public function test_fromValue(): void
+    #[TestWith(['sum', StatType::SUM])]
+    #[TestWith(['count', StatType::COUNT])]
+    #[TestWith(['avg', StatType::AVG])]
+    public function testFromValue(string $value, StatType $expected): void
     {
-        $this->assertSame(StatType::SUM, StatType::from('sum'));
-        $this->assertSame(StatType::COUNT, StatType::from('count'));
-        $this->assertSame(StatType::AVG, StatType::from('avg'));
+        $this->assertSame($expected, StatType::from($value));
     }
 
-    public function test_tryFromValue_withValidValues(): void
+    #[TestWith(['invalid_value'])]
+    #[TestWith([''])]
+    #[TestWith(['SUM'])]
+    #[TestWith(['Count'])]
+    #[TestWith(['average'])]
+    public function testFromValueWithInvalidValueShouldThrowException(string $invalidValue): void
+    {
+        $this->expectException(\ValueError::class);
+        StatType::from($invalidValue);
+    }
+
+    public function testTryFromValueWithValidValues(): void
     {
         $this->assertSame(StatType::SUM, StatType::tryFrom('sum'));
         $this->assertSame(StatType::COUNT, StatType::tryFrom('count'));
         $this->assertSame(StatType::AVG, StatType::tryFrom('avg'));
     }
 
-    public function test_tryFromValue_withInvalidValue(): void
+    public function testTryFromValueWithInvalidValue(): void
     {
         $this->assertNull(StatType::tryFrom('invalid_value'));
         $this->assertNull(StatType::tryFrom(''));
@@ -54,11 +74,40 @@ class StatTypeTest extends TestCase
         $this->assertNull(StatType::tryFrom('average'));
     }
 
-    public function test_enumUniqueValues(): void
+    public function testEnumUniqueValues(): void
     {
         $cases = StatType::cases();
-        $values = array_map(fn($case) => $case->value, $cases);
-        
+        $values = array_map(fn ($case) => $case->value, $cases);
+
         $this->assertSame(count($values), count(array_unique($values)));
     }
-} 
+
+    public function testToArray(): void
+    {
+        $expected = [
+            'value' => 'sum',
+            'label' => '总和',
+        ];
+        $this->assertEquals($expected, StatType::SUM->toArray());
+
+        $expected = [
+            'value' => 'count',
+            'label' => '计数',
+        ];
+        $this->assertEquals($expected, StatType::COUNT->toArray());
+
+        $expected = [
+            'value' => 'avg',
+            'label' => '平均值',
+        ];
+        $this->assertEquals($expected, StatType::AVG->toArray());
+    }
+
+    public function testLabelUniqueness(): void
+    {
+        $cases = StatType::cases();
+        $labels = array_map(fn ($case) => $case->getLabel(), $cases);
+
+        $this->assertSame(count($labels), count(array_unique($labels)), 'All enum labels must be unique');
+    }
+}

@@ -1,0 +1,9 @@
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: false # 在测试环境中禁用自动配置以避免冲突
+    public: true
+
+  StatisticsBundle\DataFixtures\:
+    resource: '../../DataFixtures/'

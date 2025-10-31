@@ -1,0 +1,36 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  StatisticsBundle\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+
+  # 显式注册控制器和服务
+  StatisticsBundle\Controller\Admin\DailyMetricCrudController:
+    public: true
+    tags:
+      - { name: controller.service_arguments }
+
+  StatisticsBundle\Controller\Admin\DailyReportCrudController:
+    public: true
+    tags:
+      - { name: controller.service_arguments }
+
+  StatisticsBundle\Command\StatsTableCommand:
+    public: true
+
+  StatisticsBundle\Command\GenerateDailyReportCommand:
+    public: true
+
+  StatisticsBundle\Service\AdminMenu:
+    public: true
+    tags:
+      - { name: tourze.easy_admin.menu_provider }
+
+  # 为接口添加别名
+  StatisticsBundle\Contract\DailyReportStorageInterface: '@StatisticsBundle\Repository\DailyReportRepository'

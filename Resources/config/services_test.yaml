@@ -1,0 +1,3 @@
+services:
+  # 为接口添加别名
+  StatisticsBundle\Contract\DailyReportStorageInterface: '@StatisticsBundle\Repository\DailyReportRepository'

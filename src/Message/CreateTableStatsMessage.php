@@ -42,13 +42,20 @@ class CreateTableStatsMessage implements AsyncMessageInterface
         $this->statsTable = $statsTable;
     }
 
+    /** @var array<string, array{0: string, 1: string, 2: string}> */
     private array $statColumns;
 
+    /**
+     * @return array<string, array{0: string, 1: string, 2: string}>
+     */
     public function getStatColumns(): array
     {
         return $this->statColumns;
     }
 
+    /**
+     * @param array<string, array{0: string, 1: string, 2: string}> $statColumns
+     */
     public function setStatColumns(array $statColumns): void
     {
         $this->statColumns = $statColumns;

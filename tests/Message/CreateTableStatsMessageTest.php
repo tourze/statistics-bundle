@@ -4,90 +4,98 @@ declare(strict_types=1);
 
 namespace StatisticsBundle\Tests\Message;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use StatisticsBundle\Enum\StatType;
 use StatisticsBundle\Message\CreateTableStatsMessage;
 use Tourze\AsyncContracts\AsyncMessageInterface;
 
-class CreateTableStatsMessageTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(CreateTableStatsMessage::class)]
+final class CreateTableStatsMessageTest extends TestCase
 {
     private CreateTableStatsMessage $message;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->message = new CreateTableStatsMessage();
     }
 
-    public function test_implementsAsyncMessageInterface(): void
+    public function testImplementsAsyncMessageInterface(): void
     {
         $this->assertInstanceOf(AsyncMessageInterface::class, $this->message);
     }
 
-    public function test_setAndGetStartTime(): void
+    public function testSetAndGetStartTime(): void
     {
         $startTime = '2024-01-15 00:00:00';
-        
+
         $this->message->setStartTime($startTime);
-        
+
         $this->assertSame($startTime, $this->message->getStartTime());
     }
 
-    public function test_setAndGetEndTime(): void
+    public function testSetAndGetEndTime(): void
     {
         $endTime = '2024-01-15 23:59:59';
-        
+
         $this->message->setEndTime($endTime);
-        
+
         $this->assertSame($endTime, $this->message->getEndTime());
     }
 
-    public function test_setAndGetStatsTable(): void
+    public function testSetAndGetStatsTable(): void
     {
         $statsTable = 'user_daily_stats';
-        
+
         $this->message->setStatsTable($statsTable);
-        
+
         $this->assertSame($statsTable, $this->message->getStatsTable());
     }
 
-    public function test_setAndGetTableName(): void
+    public function testSetAndGetTableName(): void
     {
         $tableName = 'users';
-        
+
         $this->message->setTableName($tableName);
-        
+
         $this->assertSame($tableName, $this->message->getTableName());
     }
 
-    public function test_setAndGetStatColumns(): void
+    public function testSetAndGetStatColumns(): void
     {
         $statColumns = [
-            'user_count_daily_new' => ['user_id', 'count', 'daily_new'],
-            'user_sum_daily_total' => ['score', 'sum', 'daily_total']
+            'user_count_daily_new' => ['user_id', 'count', StatType::COUNT->value],
+            'user_sum_daily_total' => ['score', 'sum', StatType::SUM->value],
         ];
-        
+
         $this->message->setStatColumns($statColumns);
-        
+
         $this->assertSame($statColumns, $this->message->getStatColumns());
     }
 
-    public function test_setAndGetStatColumns_withEmptyArray(): void
+    public function testSetAndGetStatColumnsWithEmptyArray(): void
     {
         $statColumns = [];
-        
+
         $this->message->setStatColumns($statColumns);
-        
+
         $this->assertSame($statColumns, $this->message->getStatColumns());
     }
 
-    public function test_allPropertiesCanBeSetAndRetrieved(): void
+    public function testAllPropertiesCanBeSetAndRetrieved(): void
     {
         $startTime = '2024-01-01 00:00:00';
         $endTime = '2024-01-01 23:59:59';
         $statsTable = 'orders_weekly_stats';
         $tableName = 'orders';
         $statColumns = [
-            'order_count' => ['id', 'count', 'weekly_new'],
-            'revenue_sum' => ['amount', 'sum', 'weekly_total']
+            'order_count' => ['id', 'count', StatType::COUNT->value],
+            'revenue_sum' => ['amount', 'sum', StatType::SUM->value],
         ];
 
         $this->message->setStartTime($startTime);
@@ -103,7 +111,7 @@ class CreateTableStatsMessageTest extends TestCase
         $this->assertSame($statColumns, $this->message->getStatColumns());
     }
 
-    public function test_setStartTime_withDifferentFormats(): void
+    public function testSetStartTimeWithDifferentFormats(): void
     {
         $formats = [
             '2024-01-15 10:30:45',
@@ -117,7 +125,7 @@ class CreateTableStatsMessageTest extends TestCase
         }
     }
 
-    public function test_setEndTime_withDifferentFormats(): void
+    public function testSetEndTimeWithDifferentFormats(): void
     {
         $formats = [
             '2024-01-15 10:30:45',
@@ -131,11 +139,11 @@ class CreateTableStatsMessageTest extends TestCase
         }
     }
 
-    public function test_setStatsTable_withDifferentTableNames(): void
+    public function testSetStatsTableWithDifferentTableNames(): void
     {
         $tableNames = [
             'users_daily_stats',
-            'orders_weekly_stats', 
+            'orders_weekly_stats',
             'products_monthly_stats',
             'ims_statistics_test_table',
         ];
@@ -146,29 +154,28 @@ class CreateTableStatsMessageTest extends TestCase
         }
     }
 
-    public function test_setStatColumns_withComplexStructure(): void
+    public function testSetStatColumnsWithComplexStructure(): void
     {
         $statColumns = [
             'user_registration_count' => [
                 'user_id',
-                'count', 
-                'daily_new',
-                'extra_info' => 'test'
+                'count',
+                StatType::COUNT->value,
             ],
             'order_revenue_sum' => [
                 'total_amount',
                 'sum',
-                'monthly_total'
+                StatType::SUM->value,
             ],
             'product_rating_avg' => [
                 'rating',
                 'avg',
-                'weekly_total'
-            ]
+                StatType::AVG->value,
+            ],
         ];
-        
+
         $this->message->setStatColumns($statColumns);
-        
+
         $this->assertSame($statColumns, $this->message->getStatColumns());
     }
-} 
+}

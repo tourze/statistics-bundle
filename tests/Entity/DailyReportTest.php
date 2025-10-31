@@ -5,26 +5,48 @@ declare(strict_types=1);
 namespace StatisticsBundle\Tests\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use StatisticsBundle\Entity\DailyMetric;
 use StatisticsBundle\Entity\DailyReport;
 use Tourze\Arrayable\PlainArrayInterface;
+use Tourze\PHPUnitDoctrineEntity\AbstractEntityTestCase;
 
-class DailyReportTest extends TestCase
+/**
+ * @internal
+ */
+#[CoversClass(DailyReport::class)]
+final class DailyReportTest extends AbstractEntityTestCase
 {
     private DailyReport $report;
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->report = new DailyReport();
     }
 
-    public function test_implementsPlainArrayInterface(): void
+    protected function createEntity(): object
+    {
+        return new DailyReport();
+    }
+
+    /**
+     * @return iterable<string, array{string, mixed}>
+     */
+    public static function propertiesProvider(): iterable
+    {
+        yield 'reportDate' => ['reportDate', '2024-01-15'];
+        yield 'extraData' => ['extraData', ['key1' => 'value1', 'key2' => 123]];
+    }
+
+    public function testImplementsPlainArrayInterface(): void
     {
         $this->assertInstanceOf(PlainArrayInterface::class, $this->report);
     }
 
-    public function test_initialValues(): void
+    public function testInitialValues(): void
     {
         $this->assertSame(0, $this->report->getId());
         $this->assertInstanceOf(ArrayCollection::class, $this->report->getMetrics());
@@ -34,7 +56,7 @@ class DailyReportTest extends TestCase
         $this->assertNull($this->report->getUpdateTime());
     }
 
-    public function test_setAndGetId(): void
+    public function testSetAndGetId(): void
     {
         $this->report->setId(123);
         $this->assertSame(123, $this->report->getId());
@@ -43,17 +65,16 @@ class DailyReportTest extends TestCase
         $this->assertNull($this->report->getId());
     }
 
-    public function test_setAndGetReportDate(): void
+    public function testSetAndGetReportDate(): void
     {
         $date = '2024-01-15';
 
-        $result = $this->report->setReportDate($date);
+        $this->report->setReportDate($date);
 
         $this->assertSame($date, $this->report->getReportDate());
-        $this->assertSame($this->report, $result);
     }
 
-    public function test_setReportDate_withDifferentFormats(): void
+    public function testSetReportDateWithDifferentFormats(): void
     {
         $dates = [
             '2024-01-01',
@@ -68,7 +89,7 @@ class DailyReportTest extends TestCase
         }
     }
 
-    public function test_addMetric(): void
+    public function testAddMetric(): void
     {
         $metric = new DailyMetric();
         $metric->setMetricId('test_metric');
@@ -82,7 +103,7 @@ class DailyReportTest extends TestCase
         $this->assertSame($this->report, $metric->getReport());
     }
 
-    public function test_addMetric_duplicateMetric(): void
+    public function testAddMetricDuplicateMetric(): void
     {
         $metric = new DailyMetric();
         $metric->setMetricId('test_metric');
@@ -94,7 +115,7 @@ class DailyReportTest extends TestCase
         $this->assertCount(1, $this->report->getMetrics());
     }
 
-    public function test_removeMetric(): void
+    public function testRemoveMetric(): void
     {
         $metric = new DailyMetric();
         $metric->setMetricId('test_metric');
@@ -110,7 +131,7 @@ class DailyReportTest extends TestCase
         $this->assertFalse($this->report->getMetrics()->contains($metric));
     }
 
-    public function test_removeMetric_nonExistentMetric(): void
+    public function testRemoveMetricNonExistentMetric(): void
     {
         $metric = new DailyMetric();
         $metric->setMetricId('test_metric');
@@ -121,7 +142,7 @@ class DailyReportTest extends TestCase
         $this->assertCount(0, $this->report->getMetrics());
     }
 
-    public function test_getMetricValue(): void
+    public function testGetMetricValue(): void
     {
         $metric = new DailyMetric();
         $metric->setMetricId('test_metric');
@@ -133,23 +154,22 @@ class DailyReportTest extends TestCase
         $this->assertSame(100.0, $this->report->getMetricValue('test_metric'));
     }
 
-    public function test_getMetricValue_withDefault(): void
+    public function testGetMetricValueWithDefault(): void
     {
         $value = $this->report->getMetricValue('non_existent_metric', 'default_value');
         $this->assertSame('default_value', $value);
     }
 
-    public function test_getMetricValue_withNullDefault(): void
+    public function testGetMetricValueWithNullDefault(): void
     {
         $value = $this->report->getMetricValue('non_existent_metric');
         $this->assertNull($value);
     }
 
-    public function test_setMetricValue_newMetric(): void
+    public function testSetMetricValueNewMetric(): void
     {
-        $result = $this->report->setMetricValue('test_metric', 'Test Metric', 150);
+        $this->report->setMetricValue('test_metric', 'Test Metric', 150);
 
-        $this->assertSame($this->report, $result);
         $this->assertCount(1, $this->report->getMetrics());
         $this->assertSame(150.0, $this->report->getMetricValue('test_metric'));
 
@@ -158,7 +178,7 @@ class DailyReportTest extends TestCase
         $this->assertSame('Test Metric', $metric->getMetricName());
     }
 
-    public function test_setMetricValue_existingMetric(): void
+    public function testSetMetricValueExistingMetric(): void
     {
         // 先添加一个指标
         $this->report->setMetricValue('test_metric', 'Test Metric', 100);
@@ -176,7 +196,7 @@ class DailyReportTest extends TestCase
         $this->assertSame('category', $metric->getCategory());
     }
 
-    public function test_setMetricValue_withUnitAndCategory(): void
+    public function testSetMetricValueWithUnitAndCategory(): void
     {
         $this->report->setMetricValue('test_metric', 'Test Metric', 75, '人', '用户统计');
 
@@ -187,7 +207,7 @@ class DailyReportTest extends TestCase
         $this->assertSame(75.0, $metric->getValue());
     }
 
-    public function test_hasMetric(): void
+    public function testHasMetric(): void
     {
         $this->assertFalse($this->report->hasMetric('non_existent'));
 
@@ -197,7 +217,7 @@ class DailyReportTest extends TestCase
         $this->assertFalse($this->report->hasMetric('another_metric'));
     }
 
-    public function test_findMetric(): void
+    public function testFindMetric(): void
     {
         $this->assertNull($this->report->findMetric('non_existent'));
 
@@ -208,20 +228,20 @@ class DailyReportTest extends TestCase
         $this->assertSame('test_metric', $metric->getMetricId());
     }
 
-    public function test_addMetrics_withArrayFormat(): void
+    public function testAddMetricsWithArrayFormat(): void
     {
         $metrics = [
             'metric1' => [
                 'name' => 'Metric 1',
                 'value' => 100,
                 'unit' => 'count',
-                'category' => 'category1'
+                'category' => 'category1',
             ],
             'metric2' => [
                 'name' => 'Metric 2',
                 'value' => 200,
                 'unit' => 'amount',
-                'category' => 'category2'
+                'category' => 'category2',
             ],
         ];
 
@@ -233,12 +253,13 @@ class DailyReportTest extends TestCase
         $this->assertSame(200.0, $this->report->getMetricValue('metric2'));
 
         $metric1 = $this->report->findMetric('metric1');
+        $this->assertNotNull($metric1);
         $this->assertSame('Metric 1', $metric1->getMetricName());
         $this->assertSame('count', $metric1->getMetricUnit());
         $this->assertSame('category1', $metric1->getCategory());
     }
 
-    public function test_addMetrics_withLegacyFormat(): void
+    public function testAddMetricsWithLegacyFormat(): void
     {
         $metrics = [
             'metric1' => 100,
@@ -252,10 +273,11 @@ class DailyReportTest extends TestCase
         $this->assertSame(200.0, $this->report->getMetricValue('metric2'));
 
         $metric1 = $this->report->findMetric('metric1');
+        $this->assertNotNull($metric1);
         $this->assertSame('metric1', $metric1->getMetricName());
     }
 
-    public function test_addMetrics_withMixedFormats(): void
+    public function testAddMetricsWithMixedFormats(): void
     {
         $metrics = [
             'metric1' => [
@@ -272,13 +294,12 @@ class DailyReportTest extends TestCase
         $this->assertSame(200.0, $this->report->getMetricValue('metric2'));
     }
 
-    public function test_setAndGetExtraData(): void
+    public function testSetAndGetExtraData(): void
     {
         $extraData = ['key1' => 'value1', 'key2' => 123];
 
-        $result = $this->report->setExtraData($extraData);
+        $this->report->setExtraData($extraData);
 
-        $this->assertSame($this->report, $result);
         $this->assertSame($extraData, $this->report->getExtraData());
 
         // 测试设置为null
@@ -286,7 +307,7 @@ class DailyReportTest extends TestCase
         $this->assertNull($this->report->getExtraData());
     }
 
-    public function test_setAndGetCreateTime(): void
+    public function testSetAndGetCreateTime(): void
     {
         $dateTime = new \DateTimeImmutable('2024-01-15 10:30:00');
 
@@ -299,7 +320,7 @@ class DailyReportTest extends TestCase
         $this->assertNull($this->report->getCreateTime());
     }
 
-    public function test_setAndGetUpdateTime(): void
+    public function testSetAndGetUpdateTime(): void
     {
         $dateTime = new \DateTimeImmutable('2024-01-15 15:45:00');
 
@@ -312,7 +333,7 @@ class DailyReportTest extends TestCase
         $this->assertNull($this->report->getUpdateTime());
     }
 
-    public function test_retrievePlainArray(): void
+    public function testRetrievePlainArray(): void
     {
         $this->report->setId(123);
         $this->report->setReportDate('2024-01-15');
@@ -336,14 +357,14 @@ class DailyReportTest extends TestCase
                     'name' => 'Metric 1',
                     'value' => 100.0,
                     'unit' => 'count',
-                    'category' => 'category1'
+                    'category' => 'category1',
                 ],
                 'metric2' => [
                     'name' => 'Metric 2',
                     'value' => 200.0,
                     'unit' => 'amount',
-                    'category' => 'category2'
-                ]
+                    'category' => 'category2',
+                ],
             ],
             'extraData' => ['test_key' => 'test_value'],
             'createTime' => '2024-01-15 10:00:00',
@@ -353,7 +374,7 @@ class DailyReportTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function test_retrievePlainArray_withNullTimes(): void
+    public function testRetrievePlainArrayWithNullTimes(): void
     {
         $this->report->setId(456);
         $this->report->setReportDate('2024-01-16');
@@ -368,7 +389,7 @@ class DailyReportTest extends TestCase
         $this->assertSame([], $result['metrics']);
     }
 
-    public function test_retrievePlainArray_withEmptyMetrics(): void
+    public function testRetrievePlainArrayWithEmptyMetrics(): void
     {
         $this->report->setReportDate('2024-01-17');
 

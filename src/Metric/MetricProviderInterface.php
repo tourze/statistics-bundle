@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag(name: self::SERVICE_TAG)]
 interface MetricProviderInterface
 {
-    const SERVICE_TAG = 'statistics.metric';
+    public const SERVICE_TAG = 'statistics.metric';
 
     /**
      * 获取指标的唯一标识符
@@ -49,6 +49,7 @@ interface MetricProviderInterface
      * 获取指定日期的指标值
      *
      * @param CarbonImmutable $date 日期
+     *
      * @return mixed 指标值
      */
     public function getMetricValue(CarbonImmutable $date): mixed;

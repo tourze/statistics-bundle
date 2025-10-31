@@ -4,15 +4,15 @@ namespace StatisticsBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use StatisticsBundle\Contract\DailyReportStorageInterface;
 use StatisticsBundle\Entity\DailyReport;
+use Tourze\PHPUnitSymfonyKernelTest\Attribute\AsRepository;
 
 /**
- * @method DailyReport|null find($id, $lockMode = null, $lockVersion = null)
- * @method DailyReport|null findOneBy(array $criteria, array $orderBy = null)
- * @method DailyReport[] findAll()
- * @method DailyReport[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<DailyReport>
  */
-class DailyReportRepository extends ServiceEntityRepository
+#[AsRepository(entityClass: DailyReport::class)]
+class DailyReportRepository extends ServiceEntityRepository implements DailyReportStorageInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -32,13 +32,37 @@ class DailyReportRepository extends ServiceEntityRepository
      */
     public function findByDateRange(string $startDate, string $endDate): array
     {
-        return $this->createQueryBuilder('dr')
+        $result = $this->createQueryBuilder('dr')
             ->where('dr.reportDate >= :startDate')
             ->andWhere('dr.reportDate <= :endDate')
             ->setParameter('startDate', $startDate)
             ->setParameter('endDate', $endDate)
             ->orderBy('dr.reportDate', 'ASC')
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
+
+        assert(is_array($result));
+        /** @var DailyReport[] $result */
+
+        return $result;
+    }
+
+    public function save(DailyReport $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(DailyReport $entity, bool $flush = true): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 }

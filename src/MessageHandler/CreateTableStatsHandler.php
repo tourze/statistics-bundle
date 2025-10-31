@@ -30,6 +30,14 @@ class CreateTableStatsHandler
             $qb = $this->connection->createQueryBuilder();
             $qb->from($message->getTableName());
 
+            // 确保转换为枚举对象
+            if (is_string($statsType)) {
+                $statsType = StatType::from($statsType);
+            }
+            if (is_string($timeDimension)) {
+                $timeDimension = StatTimeDimension::from($timeDimension);
+            }
+
             switch ($statsType) {
                 case StatType::COUNT:
                     $qb->select("COUNT(DISTINCT {$propertyName})");
@@ -42,7 +50,7 @@ class CreateTableStatsHandler
                     break;
             }
 
-            if (in_array($timeDimension, [StatTimeDimension::DAILY_NEW, StatTimeDimension::WEEKLY_NEW, StatTimeDimension::MONTHLY_NEW])) {
+            if (in_array($timeDimension, [StatTimeDimension::DAILY_NEW, StatTimeDimension::WEEKLY_NEW, StatTimeDimension::MONTHLY_NEW], true)) {
                 $qb->andWhere('create_time BETWEEN :start AND :end');
                 $qb->setParameter('start', $startTime);
                 $qb->setParameter('end', $endTime);
@@ -60,7 +68,8 @@ class CreateTableStatsHandler
                 ->setParameter('start_time', $startTime)
                 ->setParameter('end_time', $endTime)
                 ->executeQuery()
-                ->fetchOne();
+                ->fetchOne()
+            ;
             if ($rowCount > 0) {
                 $this->connection->update($message->getStatsTable(), [
                     $columnName => $statResult,

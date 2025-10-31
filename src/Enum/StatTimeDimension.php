@@ -1,6 +1,7 @@
 <?php
 
 namespace StatisticsBundle\Enum;
+
 use Tourze\EnumExtra\Itemable;
 use Tourze\EnumExtra\ItemTrait;
 use Tourze\EnumExtra\Labelable;
@@ -11,6 +12,7 @@ enum StatTimeDimension: string implements Itemable, Labelable, Selectable
 {
     use ItemTrait;
     use SelectTrait;
+
     case DAILY_NEW = 'daily_new';
     case WEEKLY_NEW = 'weekly_new';
     case MONTHLY_NEW = 'monthly_new';
@@ -20,7 +22,7 @@ enum StatTimeDimension: string implements Itemable, Labelable, Selectable
 
     public function getLabel(): string
     {
-        return match($this) {
+        return match ($this) {
             self::DAILY_NEW => '每日新增',
             self::WEEKLY_NEW => '每周新增',
             self::MONTHLY_NEW => '每月新增',
@@ -32,7 +34,7 @@ enum StatTimeDimension: string implements Itemable, Labelable, Selectable
 
     public function getTableNameSuffix(): string
     {
-        return match($this) {
+        return match ($this) {
             self::DAILY_NEW, self::DAILY_TOTAL => '_daily_stats',
             self::WEEKLY_NEW, self::WEEKLY_TOTAL => '_weekly_stats',
             self::MONTHLY_NEW, self::MONTHLY_TOTAL => '_monthly_stats',
