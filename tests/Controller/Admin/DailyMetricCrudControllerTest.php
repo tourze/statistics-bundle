@@ -127,10 +127,12 @@ final class DailyMetricCrudControllerTest extends AbstractEasyAdminControllerTes
      */
     public function testValidationErrors(): void
     {
-        if (!$this->client) {
-            $this->markTestSkipped('Client not initialized');
+        $client = $this->client;
+        if (null === $client) {
+            self::markTestSkipped('Client not initialized');
         }
-        $crawler = $this->client->request('GET', $this->generateAdminUrl(Action::NEW));
+
+        $crawler = $client->request('GET', $this->generateAdminUrl(Action::NEW));
         $this->assertResponseIsSuccessful();
 
         $entityName = $this->getEntitySimpleName();
@@ -149,7 +151,7 @@ final class DailyMetricCrudControllerTest extends AbstractEasyAdminControllerTes
 
             try {
                 // 提交空表单以触发验证错误
-                $crawler = $this->client->submit($form);
+                $crawler = $client->submit($form);
                 $this->assertResponseStatusCodeSame(422);
 
                 // 验证页面包含错误信息
