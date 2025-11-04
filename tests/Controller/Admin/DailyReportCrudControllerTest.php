@@ -26,7 +26,7 @@ final class DailyReportCrudControllerTest extends AbstractEasyAdminControllerTes
 
     private KernelBrowser $client;
 
-    protected function onSetUp(): void
+    protected function afterEasyAdminSetUp(): void
     {
         $this->client = self::createClientWithDatabase();
 

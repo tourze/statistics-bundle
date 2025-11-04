@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use StatisticsBundle\Attribute\AsStatsColumn;
 use StatisticsBundle\Entity\DailyReport;
 use StatisticsBundle\Enum\StatTimeDimension;
-use StatisticsBundle\Enum\StatType;
 use StatisticsBundle\Message\CreateTableStatsMessage;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -23,13 +22,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Tourze\DoctrineHelper\ReflectionHelper;
-use Tourze\LockCommandBundle\Command\LockableCommand;
 use Tourze\Symfony\CronJob\Attribute\AsCronTask;
 
 #[AsCronTask(expression: '10 * * * *')]
 #[AsCronTask(expression: '59 23 * * *')]
 #[AsCommand(name: self::NAME, description: '定期统计表数据')]
-class StatsTableCommand extends LockableCommand
+class StatsTableCommand extends Command
 {
     public const NAME = 'app:stats-table';
 
