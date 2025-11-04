@@ -2,7 +2,7 @@ services:
   # default configuration for services in *this* file
   _defaults:
     autowire: true      # Automatically injects dependencies in your services.
-    autoconfigure: false # 在测试环境中禁用自动配置以避免冲突
+    autoconfigure: false # 禁用全局自动配置，测试数据加载器在环境特定配置中注册
 
   # 显式注册 Controller 并开启必要的服务功能
   StatisticsBundle\Controller\:
@@ -11,14 +11,27 @@ services:
     autoconfigure: true
     tags: ['controller.service_arguments']
 
+  # 自动注册 Service 目录下的所有服务
+  StatisticsBundle\Service\:
+    resource: '../../Service/'
+    autoconfigure: true
+
+  # 自动注册 MessageHandler 目录下的所有消息处理器
+  StatisticsBundle\MessageHandler\:
+    resource: '../../MessageHandler/'
+    autoconfigure: true
+    tags: ['messenger.message_handler']
+
   # 手动配置命令服务，明确指定所有依赖
   StatisticsBundle\Command\GenerateDailyReportCommand:
+    autoconfigure: true
     arguments:
       $dailyReportService: '@StatisticsBundle\Service\DailyReportService'
     tags:
       - { name: 'console.command' }
 
   StatisticsBundle\Command\StatsTableCommand:
+    autoconfigure: true
     arguments:
       $entityManager: '@doctrine.orm.entity_manager'
       $connection: '@doctrine.dbal.default_connection'
