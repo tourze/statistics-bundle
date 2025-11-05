@@ -27,7 +27,7 @@ final class DailyMetricCrudControllerTest extends AbstractEasyAdminControllerTes
 
     private ?KernelBrowser $client = null;
 
-    protected function onAfterSetUp(): void
+    protected function afterEasyAdminSetUp(): void
     {
         $this->client = self::createClientWithDatabase();
 
