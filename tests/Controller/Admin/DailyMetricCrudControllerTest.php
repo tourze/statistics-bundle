@@ -29,14 +29,10 @@ final class DailyMetricCrudControllerTest extends AbstractEasyAdminControllerTes
 
     protected function afterEasyAdminSetUp(): void
     {
-        $this->client = self::createClientWithDatabase();
+        $this->client = self::createAuthenticatedClient();
 
         // 设置客户端到 Symfony 的静态存储中
         self::getClient($this->client);
-
-        // 创建并登录管理员用户
-        $this->createAdminUser('admin@test.com', 'adminpass');
-        $this->loginAsAdmin($this->client, 'admin@test.com', 'adminpass');
 
         // 创建测试数据
         $this->createTestData();
